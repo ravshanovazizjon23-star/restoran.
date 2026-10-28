@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lazzat Restorani - Milliy va Yevropa Taomlari</title>
+    <!-- FontAwesome ikonkalar to'plami -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Umumiy sozlamalar */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        /* Restoran orqa fon rasmi (Hero bo'limi) */
+        .hero {
+            position: relative;
+            height: 60vh;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(18,18,18,1) 100%),
+                        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            color: #ff9f43;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: #ddd;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #ff9f43;
+            color: #121212;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #ee5253;
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        /* Asosiy konteyner */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            color: #ff9f43;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        /* Taomlar Menyu Katagi (Grid) */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .menu-card {
+            background: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(255, 159, 67, 0.25);
+        }
+
+        /* Taomlarning Orqa Fon Rasmi */
+        .card-img {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .category-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.75);
+            color: #ff9f43;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            border-radius: 15px;
+            border: 1px solid #ff9f43;
+        }
+
+        .card-body {
+            padding: 18px;
+        }
+
+        .card-body h3 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .card-body p {
+            color: #aaa;
+            font-size: 0.9rem;
+            height: 45px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #10ac84;
+        }
+
+        .add-btn {
+            background: #333;
+            color: #ff9f43;
+            border: 1px solid #ff9f43;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .add-btn:hover {
+            background: #ff9f43;
+            color: #121212;
+        }
+
+        /* Savatcha bo'limi */
+        .cart-box {
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        #cart-items {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .empty-msg {
+            color: #888;
+            font-style: italic;
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #10ac84;
+            margin-bottom: 20px;
+            padding-top: 10px;
+        }
+
+        .order-submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ee5253;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .order-submit-btn:hover {
+            background: #ff6b6b;
+        }
+
+        /* Kontakt va Lokatsiya */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-card {
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .info-card .icon {
+            font-size: 2.5rem;
+            color: #ff9f43;
+            margin-bottom: 15px;
+        }
+
+        .contact-link {
+            display: block;
+            color: #ff9f43;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 5px;
+        }
+
+        .map-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #10ac84;
+        }
+
+        /* Xarita ramkasi */
+        .map-container {
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sarlavha (Header) -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Lazzat Restorani</h1>
+            <p>Milliy va Yevropa taomlari, mazali va sifatli tezkor yetkazib berish!</p>
+            <a href="#menu" class="btn-primary">Menyuni ko'rish</a>
+        </div>
+    </header>
+
+    <!-- Asosiy konteyner -->
+    <main class="container">
+        
+        <!-- TAOMLAR MENYUSI -->
+        <section id="menu" class="section">
+            <h2 class="section-title"><i class="fa-solid fa-utensils"></i> Bizning Menyu</h2>
+            
+            <div class="menu-grid">
+                
+                <!-- 1-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Milliy Taom</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Osh (Toshkent Palovi)</h3>
+                        <p>Devzira guruch, sershira qo'y go'shti, qazi va bedana tuxumi bilan.</p>
+                        <div class="card-footer">
+                            <span class="price">38 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Osh (Toshkent Palovi)', 38000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Xamir Taom</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Manti (Go'shtli)</h3>
+                        <p>Maydalangan pichoq go'shti va piyozli bug'da pishirilgan xushbo'y manti.</p>
+                        <div class="card-footer">
+                            <span class="price">32 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Manti (Go\'shtli)', 32000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Kabab</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Qiyma Shashlik</h3>
+                        <p>Ko'mirlarda pishirilgan suvli qiyma shashlik va marinadlangan piyoz.</p>
+                        <div class="card-footer">
+                            <span class="price">18 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Qiyma Shashlik', 18000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Suyuq Taom</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Qo'lda Cho'zma Lag'mon</h3>
+                        <p>Suyuq qayla, yangi uzilgan sabzavotlar va qo'lda cho'zilgan xamir.</p>
+                        <div class="card-footer">
+                            <span class="price">35 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Lag\'mon', 35000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1608039829572-78524f79c4c7?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Tandir</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Tandir Somsa (Go'shtli)</h3>
+                        <p>Tandirda pishirilgan, qarsillama xamirli va to'g'ralgan go'shtli somsa.</p>
+                        <div class="card-footer">
+                            <span class="price">10 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Tandir Somsa', 10000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Milliy Taom</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Qozon Kobo'p</h3>
+                        <p>Qozonda qizartirib qovurilgan yumshoq qo'zi go'shti va kartoshka.</p>
+                        <div class="card-footer">
+                            <span class="price">45 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Qozon Kobo\'p', 45000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Fast Food</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Lazzat Burger</h3>
+                        <p>100% mol go'shtidan kotlet, pishloq, bodring, pomidor va maxsus sous.</p>
+                        <div class="card-footer">
+                            <span class="price">28 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Lazzat Burger', 28000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8-Taom -->
+                <div class="menu-card">
+                    <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80');">
+                        <span class="category-badge">Pitsa</span>
+                    </div>
+                    <div class="card-body">
+                        <h3>Margarita Pitsasi</h3>
+                        <p>Motsarella pishlog'i, maxsus tomat sousi va yangi rayhon barglari.</p>
+                        <div class="card-footer">
+                            <span class="price">55 000 so'm</span>
+                            <button class="add-btn" onclick="addToCart('Margarita Pitsasi', 55000)">
+                                <i class="fa-solid fa-cart-plus"></i> Tanlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- BUYURTMA SAVATCHASI BO'LIMI -->
+        <section id="cart-section" class="section cart-box">
+            <h2 class="section-title"><i class="fa-solid fa-cart-shopping"></i> Tanlangan Taomlar</h2>
+            <div id="cart-items">
+                <p class="empty-msg">Siz hali hech narsa tanlamadingiz.</p>
+            </div>
+            <div class="cart-total">
+                <span>Jami summa:</span>
+                <span id="total-price">0 so'm</span>
+            </div>
+            <button class="order-submit-btn" onclick="sendOrder()">
+                <i class="fa-solid fa-phone"></i> Qo'ng'iroq Qilib Buyurtma Berish
+            </button>
+        </section>
+
+        <!-- LOKATSIYA VA KONTAKT BO'LIMI -->
+        <section class="section info-section">
+            <h2 class="section-title"><i class="fa-solid fa-map-location-dot"></i> Bizning Manzil & Kontakt</h2>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon"><i class="fa-solid fa-phone-volume"></i></div>
+                    <h3>Telefon Raqam</h3>
+                    <p>Buyurtma berish uchun:</p>
+                    <a href="tel:+998901234567" class="contact-link">+998 (90) 123-45-67</a>
+                </div>
+
+                <div class="info-card">
+                    <div class="icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <h3>Restoran Manzili</h3>
+                    <p>Toshkent shahri, Amir Temur shoh ko'chasi, 12-uy</p>
+                    <a href="https://maps.google.com" target="_blank" class="map-link">Xaritada ochish</a>
+                </div>
+            </div>
+
+            <!-- GOOGLE XARITA -->
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1997.7774843477176!2d69.279737!3d41.311158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE4JzQwLjIiTiA2OcKwMTYnNDcuMSJF!5e0!3m2!1suz!2s!4v1620000000000!5m2!1suz!2s" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JAVASCRIPT KODI -->
+    <script>
+        let cart = [];
+
+        function addToCart(title, price) {
+            cart.push({ title, price });
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartContainer = document.getElementById("cart-items");
+            const totalPriceEl = document.getElementById("total-price");
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = '<p class="empty-msg">Siz hali hech narsa tanlamadingiz.</p>';
+                totalPriceEl.textContent = '0 so\'m';
+                return;
+            }
+
+            cartContainer.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                
+                const itemRow = document.createElement("div");
+                itemRow.className = "cart-item";
+                itemRow.innerHTML = `
+                    <span>${item.title}</span>
+                    <span>${item.price.toLocaleString()} so'm 
+                    <i class="fa-solid fa-trash" style="color:#ee5253; cursor:pointer; margin-left:10px;" onclick="removeFromCart(${index})"></i></span>
+                `;
+                cartContainer.appendChild(itemRow);
+            });
+
+            totalPriceEl.textContent = total.toLocaleString() + " so'm";
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function sendOrder() {
+            const phone = "+998901234567";
+
+            if (cart.length === 0) {
+                alert("Savat bo'sh! Iltimos, avval menudan taom tanlang.");
+                return;
+            }
+
+            let itemsText = cart.map(i => i.title).join(", ");
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+
+            const isConfirmed = confirm(
+                `Buyurtmangiz:\n- ${itemsText}\n\nJami: ${total.toLocaleString()} so'm.\n\nQo'ng'iroq qilib tasdiqlaysizmi?`
+            );
+
+            if (isConfirmed) {
+                window.location.href = `tel:${phone}`;
+            }
+        }
+    </script>
+</body>
+</html>
